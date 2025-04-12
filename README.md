@@ -1,97 +1,81 @@
-# @tfpkgr/package-name
+# @tfpkgr/utils
 
-A standardized TypeScript-based npm package template with automatic bundling using **tsup**.
+A collection of small, reusable utility functions to simplify common programming tasks.
 
-## Features
+## Installation
 
--   **TypeScript support**: Ensures type safety and maintainability.
--   **Automatic bundling**: Uses `tsup` to bundle TypeScript into CommonJS (CJS) and ECMAScript Module (ESM) formats.
--   **Google TypeScript Style**: Enforces code consistency with `gts`.
--   **GitHub Packages Registry**: Pre-configured for publishing to GitHub Packages.
--   **Linting & Formatting**: Includes `gts` for linting and auto-fixing code style issues.
--   **GitHub Actions**: Automated publishing workflow on release.
-
-## Getting Started
-
-### 1. Clone the Repository
-
-```sh
-npx degit tfpkgr/template-npm my-new-package
-cd my-new-package
+```bash
+npm install @tfpkgr/utils
 ```
 
-### 2. Rename the Package
+## Usage
 
-Before installing dependencies, update the `name` field in `package.json` to your package name. This ensures `package-lock.json` is correctly updated when you install dependencies.
+### Importing Utilities
 
-### 3. Install Dependencies
+You can import individual utilities or the entire package:
 
-```sh
-npm install
+```typescript
+import {
+	generateUniqueId,
+	stringifyParams,
+	obscure,
+	uuidGenerator,
+} from '@tfpkgr/utils';
 ```
 
-### 4. Customize Package
+### Utilities
 
--   Update `package.json` with the appropriate `description` and `author`.
--   Modify `src/index.ts` to implement your package functionality.
+#### 1. `generateUniqueId`
 
-### 5. Build the Package
+Generates a unique identifier string with an optional prefix and suffix.
 
-```sh
-npm run build
+```typescript
+import {generateUniqueId} from '@tfpkgr/utils';
+
+const id = generateUniqueId(16, 'prefix', 'suffix');
+console.log(id); // Example: prefix_abc123xyz_suffix
 ```
 
-This will generate the `dist/` directory containing the compiled files.
+#### 2. `stringifyParams`
 
-### 6. Lint & Fix Code
+Converts an object of parameters into a query string or `URLSearchParams` object.
 
-```sh
-npm run lint  # Check for issues
-npm run fix   # Auto-fix issues
+```typescript
+import {stringifyParams} from '@tfpkgr/utils';
+
+const params = {name: 'John', age: 30, hobbies: ['reading', 'coding']};
+const queryString = stringifyParams(params, {returnType: 'string'});
+console.log(queryString); // Output: name=John&age=30&hobbies=reading&hobbies=coding
 ```
 
-### 7. Publish to GitHub Packages
+#### 3. `obscure`
 
-#### Automatic Publishing on Release
+A utility for obscuring strings, such as emails and phone numbers.
 
-This repository includes a GitHub Actions workflow (`.github/workflows/publish.yaml`) that automatically publishes the package when a release is created.
+```typescript
+import {obscure} from '@tfpkgr/utils';
 
-#### Manual Publishing
+const obscuredEmail = obscure.email('example@gmail.com');
+console.log(obscuredEmail); // Output: ex******@gmail.com
 
-1. Authenticate with GitHub:
-    ```sh
-    npm login --registry=https://npm.pkg.github.com
-    ```
-2. Publish the package:
-    ```sh
-    npm publish
-    ```
-
-## File Structure
-
-```
-my-new-package/
-├── src/              # Source TypeScript files
-│   ├── index.ts      # Main entry point
-├── dist/             # Compiled output (ignored in Git)
-├── .github/workflows/ # GitHub Actions workflow for publishing
-│   ├── publish.yaml  # Publish package on release
-├── tsconfig.json     # TypeScript configuration
-├── tsconfig.build.json # Build-specific TypeScript config
-├── tsup.config.ts    # tsup bundler config
-├── package.json      # Project metadata & dependencies
-├── README.md         # Project documentation
-├── LICENSE           # License file
+const obscuredPhone = obscure.phone('+1234567890');
+console.log(obscuredPhone); // Output: +12******90
 ```
 
-## [Multiple Exports](docs/multiple-exports.md)
+#### 4. `uuidGenerator`
 
-If your package has multiple exports, refer to [this guide](docs/multiple-exports.md) for configuration details.
+Generates a unique identifier string based on the provided prefix, name, and namespace.
+
+```typescript
+import {uuidGenerator} from '@tfpkgr/utils';
+
+const uuid = uuidGenerator('name', 'namespace', {
+	prefix: 'user',
+	separator: '-',
+});
+console.log(uuid); // Example: user-123e4567-e89b-12d3-a456-426614174000
+```
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
-
----
-
-🚀 Built with ❤️ by MyDeck
+This project is licensed under the MIT License.
